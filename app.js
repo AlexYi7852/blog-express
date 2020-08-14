@@ -1,15 +1,17 @@
 var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
+var path = require('path'); // 处理路劲插件
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const blogRouter = require('./routes/blog');
+const userRouter = require('./routes/user');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
 
-// 视图
+// 前端模版引
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -22,6 +24,8 @@ app.use(express.static(path.join(__dirname, 'public'))); // 处理public静态�
 // 注册路由
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api/blog', blogRouter);
+app.use('/api/user', userRouter);
 
 // 404 处理
 app.use(function(req, res, next) {
