@@ -1,9 +1,11 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path'); // 处理路劲插件
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const session = require('express-session')
+
+const fs = require('fs')
+const path = require('path');
+const logger = require('morgan');
+const express = require('express');
+const session = require('express-session');
+const createError = require('http-errors');
+const cookieParser = require('cookie-parser');
 const redisStore = require('connect-redis')(session) // session 和 redis 创立链接
 
 const blogRouter = require('./routes/blog');
@@ -17,7 +19,24 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev')); // 记录日志
+const env = process.env.NODE_ENV
+// 记录日志
+if (env !== 'production') {
+  // 开发 or 测试环境
+  app.use(logger('dev', {
+    stream: process.stdout
+  }));
+} else {
+  // 线上环境
+  const fileName = path.join(__dirname, 'logs', 'access.log')
+  const writeStream = fs.createWriteStream(fileName, {
+    flags: 'a' // a: 追加、w: 覆盖
+  })
+  app.use(logger('combined', {
+    stream: writeStream
+  }));
+}
+
 app.use(express.json()); // 处理请求的数据
 app.use(express.urlencoded({ extended: false })); // 处理请求格式、json、form-data
 app.use(cookieParser()); // 解析 cookie
