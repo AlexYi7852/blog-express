@@ -10,8 +10,6 @@ const redisStore = require('connect-redis')(session) // session 和 redis 创立
 
 const blogRouter = require('./routes/blog');
 const userRouter = require('./routes/user');
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -58,8 +56,6 @@ app.use(session({
 }))
 
 // 注册路由
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
 app.use('/api/blog', blogRouter);
 app.use('/api/user', userRouter);
 
