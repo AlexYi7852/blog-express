@@ -1,5 +1,5 @@
 
-const express = require('express')
+const express = require('../lib/express/like-express')
 
 const app = express()
 
